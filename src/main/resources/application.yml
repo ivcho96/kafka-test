@@ -2,8 +2,27 @@ server:
   port: 8080
 
 spring:
+  config:
+    use-legacy-processing: true
+  jpa:
+    properties:
+      hibernate:
+        dialect:
+      ddl-auto: update
+  datasource:
+    # Configure to match a running PostgreSQL database
+    url: "jdbc:postgresql://localhost:54321/kafka?stringtype=unspecified"
+    username: "carnet"
+    password: "carnet"
   kafka:
-    bootstrap-servers: "localhost:9092"
+    bootstrap-servers: "b-3-public.democluster1.se9sc1.c8.kafka.eu-west-1.amazonaws.com:9196,b-2-public.democluster1.se9sc1.c8.kafka.eu-west-1.amazonaws.com:9196,b-1-public.democluster1.se9sc1.c8.kafka.eu-west-1.amazonaws.com:9196"
+    properties:
+      security:
+        protocol: "SASL_SSL"
+      sasl:
+        mechanism: "SCRAM-SHA-512"
+        jaas:
+          config: org.apache.kafka.common.security.scram.ScramLoginModule required username="scms-kafka" password="scms-kafka-secret";
     producer:
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
@@ -17,9 +36,3 @@ spring:
           json:
             trusted:
               packages: "com.ms.kafka.demo"
-#        security:
-#          protocol: "SALS_SSL"
-#          sasl:
-#            mechanism: "SCRAM-SHA-256"
-#            jaas:
-#              config:
